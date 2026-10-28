@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>관리비·공과금 비교 웹앱 사용설명서</title>
+  <style>
+    @page{size:A4;margin:14mm}
+    *{box-sizing:border-box}
+    body{margin:0;background:#f3f6fb;color:#202938;font-family:"Noto Sans KR","Noto Sans",Arial,"Malgun Gothic",sans-serif;font-weight:500;line-height:1.65;letter-spacing:-.018em}
+    .page{max-width:820px;margin:28px auto;padding:0 48px 38px;background:#fff;border:1px solid #e5eaf2;border-radius:22px;box-shadow:0 14px 40px #1e35500f;overflow:hidden}
+    .page:before{content:"USER GUIDE  ·  01";display:block;margin:0 -48px 38px;padding:13px 48px;background:#172b56;color:#b9c9f8;font-size:11px;font-weight:700;letter-spacing:.16em}
+    h1{font-size:31px;line-height:1.25;margin:0 0 10px;color:#172b56;font-weight:700;letter-spacing:-.05em}
+    h1:after{content:"";display:block;width:42px;height:4px;margin-top:18px;background:#4b6bfa;border-radius:4px}
+    h2{counter-increment:section;display:flex;align-items:center;gap:9px;font-size:17px;margin:27px 0 11px;padding:10px 13px;border:1px solid #e0e6f2;border-left:4px solid #4b6bfa;border-radius:12px;background:linear-gradient(90deg,#f5f7ff,#fff);color:#172b56;font-weight:700}
+    h2:before{content:counter(section,decimal-leading-zero);display:inline-flex;align-items:center;justify-content:center;flex:0 0 29px;width:29px;height:29px;border-radius:9px;background:#315efb;color:#fff;font-size:12px;letter-spacing:0}
+    .section-icon{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:8px;background:#e9edff;font-size:16px;line-height:1}
+    .page{counter-reset:section}
+    p{margin:5px 0}ol,ul{margin:7px 0 10px;padding-left:23px}li{padding-left:3px;margin:3px 0}.intro{color:#5d6a7e;margin-bottom:22px;font-size:14px}.tip,.warning{border:1px solid #dce5ff;border-left:4px solid #4b6bfa;background:#f6f8ff;padding:12px 15px;margin:12px 0;border-radius:0 12px 12px 0}.screen{background:#fafbfe;border:1px solid #e2e7f0;padding:12px 17px;border-radius:13px}.screen li{margin:3px 0}.up{color:#c53939}.down{color:#216db8}.same{color:#68717e}.small{font-size:12px;color:#748095;margin-top:12px}.warning{border-color:#f3e4b6;border-left-color:#d69b23;background:#fffaf0}.page code{padding:2px 6px;border-radius:5px;background:#f0f2f6;color:#39455a;font-family:inherit;font-size:.92em}
+    @media(max-width:600px){.page{margin:0;padding:0 22px 30px;border:0;border-radius:0;box-shadow:none}.page:before{margin:0 -22px 28px;padding-left:22px;padding-right:22px}h1{font-size:26px}}
+    @media print{body{background:#fff}.page{margin:0;max-width:none;padding:0;border:0;border-radius:0;box-shadow:none}.page:before{margin-left:0;margin-right:0}}
+  </style>
+</head>
+<body>
+  <article class="page">
+    <h1>관리비·공과금 비교 웹앱 사용설명서</h1>
+    <p class="intro">매달 내는 전기·수도·가스·관리비를 기록하고, 지난달과 작년 같은 달의 변화를 쉽게 확인하는 설명서입니다.</p>
+
+    <h2><span class="section-icon">✨</span> 이 앱이 해 주는 일</h2>
+    <p>매달 전기·수도·가스·관리비 금액을 기록합니다.<br>이번 달을 지난달과 작년 같은 달과 비교해 줍니다.<br>자료는 내 기기에만 저장되며 개인정보는 입력하지 않습니다.</p>
+
+    <h2><span class="section-icon">▶</span> 실행 방법</h2>
+    <ol><li><code>index.html</code> 파일을 더블클릭합니다.</li><li>인터넷 연결이나 별도 설치는 필요하지 않습니다.</li><li>화면이 열리면 위쪽의 <b>보고 싶은 달</b>에서 연월을 고릅니다.</li><li>처음 사용할 때는 화면 아래의 입력란에서 금액을 저장합니다.</li></ol>
+
+    <h2><span class="section-icon">🧾</span> 매달 하는 일</h2>
+    <ol><li>고지서를 보고 전기·수도·가스·관리비 금액만 확인합니다.</li><li>화면 아래 <b>월별 금액 입력</b>에서 연월을 선택합니다.</li><li>네 칸에 금액을 입력하고 <b>저장하기</b>를 누릅니다.</li><li>저장한 달이 이미 있으면 덮어쓸지 확인한 뒤 선택합니다.</li><li>화면 위쪽에서 합계와 비교 결과를 확인합니다.</li></ol>
+    <div class="tip"><b>여러 달을 한 번에 입력하려면</b><br>CSV 불러오기를 누르고 <code>연월,전기,수도,가스,관리비</code> 순서의 파일을 선택합니다. UTF-8과 EUC-KR 파일을 읽으며, 잘못된 줄은 건너뛰고 줄 번호를 알려줍니다.</div>
+
+    <h2><span class="section-icon">👀</span> 화면 읽는 법</h2>
+    <div class="screen"><ol><li><b>보고 싶은 달</b>: 확인할 연월을 고릅니다.</li><li><b>한 줄 요약</b>: 전체 금액의 증감과 가장 많이 오른 항목을 보여줍니다.</li><li><b>공과금 카드</b>: 전기·수도·가스·관리비·전체 합계를 보여줍니다.</li><li><b>12개월 추이</b>: 전체 합계의 최근 12개월 변화를 막대로 보여줍니다.</li><li><b>전체 기록</b>: 저장된 기록을 보고 필요하면 삭제합니다.</li><li><b>월별 금액 입력</b>: 새 기록을 추가합니다.</li></ol></div>
+    <p><b>기호와 색깔</b></p><ul><li class="up">빨간색 ▲ 증가: 비교 대상보다 금액이 올랐습니다.</li><li class="down">파란색 ▼ 감소: 비교 대상보다 금액이 내렸습니다.</li><li class="same">회색 − 변화 없음: 금액이 같습니다.</li></ul>
+    <p>증감률은 비교 대상 금액에 비해 몇 퍼센트 변했는지입니다. 예를 들어 10,000원에서 12,000원이 되면 2,000원 증가, 증감률은 20.0%입니다. 비교할 자료가 없으면 <b>비교 자료 없음</b> 또는 <b>작년 자료 없음</b>으로 표시됩니다. 비교 대상이 0원이고 이번 달에 금액이 생기면 <b>새로 발생</b>으로 표시됩니다.</p>
+
+    <h2><span class="section-icon">🛠</span> 자주 생기는 문제와 해결 방법</h2>
+    <ul><li><b>비교 자료 없음</b>: 바로 전 달 기록이 없습니다. 지난달 금액을 먼저 저장하세요.</li><li><b>작년 자료 없음</b>: 작년 같은 달 기록이 없습니다. 해당 연월을 저장하면 다음부터 비교할 수 있습니다.</li><li><b>새로 발생</b>: 비교 대상이 0원이어서 퍼센트를 계산할 수 없는 경우입니다.</li><li><b>저장되지 않음</b>: 연월 선택 여부를 확인하고, 금액을 빈칸·음수·문자로 입력하지 않았는지 확인하세요.</li><li><b>CSV 일부가 빠짐</b>: 안내된 줄 번호에서 5개 열의 순서와 숫자 형식을 확인하세요.</li><li><b>예전 기록이 보이지 않음</b>: 같은 브라우저와 같은 기기에서 파일을 열었는지 확인하세요.</li></ul>
+
+    <h2><span class="section-icon">🔒</span> 개인정보 주의</h2>
+    <div class="warning">고지서 사진을 앱에 넣지 마세요. 주소, 고객번호, 계좌번호, 이름과 같은 개인정보도 입력하지 마세요. 이 앱에는 연월과 공과금 금액만 기록합니다.</div>
+    <p class="small">데이터는 브라우저의 기기 내 저장소에만 보관됩니다.</p>
+  </article>
+</body>
+</html>
+
