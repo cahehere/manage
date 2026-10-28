@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>관리비·공과금 비교</title>
+  <style>
+    /* 전체 화면의 기본 모양 */
+    :root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e5e9f0;--up:#d14343;--down:#2774c5;--same:#737b87;--accent:#315efb}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+    .wrap{max-width:1120px;margin:auto;padding:28px 18px 60px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:20px}.eyebrow{color:var(--accent);font-weight:800;margin:0 0 4px}.hero h1{margin:0;font-size:clamp(1.65rem,4vw,2.4rem)}.hero p{margin:6px 0 0;color:var(--muted)}
+    .panel,.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px #1d31500a}.panel{padding:20px;margin-top:18px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.toolbar label{font-weight:700}.toolbar input{margin-left:8px}
+    input,button{font:inherit} input[type="month"],input[type="number"]{border:1px solid #cfd6e2;border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink)}button{border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:#fff;font-weight:750;cursor:pointer}button.secondary{background:#eef2ff;color:#2845b9}button.ghost{background:#f1f3f6;color:#3f4856}button.danger{background:#fff0f0;color:#b52d2d;padding:7px 10px}button:hover{filter:brightness(.97)}
+    .cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:18px}.card{padding:17px}.card h3{font-size:1rem;margin:0;color:#364152}.amount{font-size:1.45rem;font-weight:850;margin:9px 0 12px}.compare{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:9px;margin-top:8px}.compare strong{display:block;font-size:.95rem}.up{color:var(--up)}.down{color:var(--down)}.same{color:var(--same)}.note{font-size:.82rem;color:var(--muted);margin:3px 0 0}.summary{font-size:1.02rem;margin:0}.summary strong{font-weight:850}.empty{padding:26px;text-align:center;color:var(--muted)}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}.section-title h2{font-size:1.15rem;margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}.chart{display:grid;grid-template-columns:repeat(12,minmax(26px,1fr));gap:8px;align-items:end;height:260px;padding:18px 8px 30px;border-bottom:1px solid var(--line);background:linear-gradient(to top,#e9edf4 1px,transparent 1px) 0 0/100% 25%}.bar-col{height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:5px;min-width:0}.bar-value{font-size:.68rem;color:var(--muted);white-space:nowrap}.bar{width:min(34px,80%);min-height:4px;background:linear-gradient(180deg,#5277ff,#315efb);border-radius:7px 7px 2px 2px}.missing{height:72%;width:min(34px,80%);border:2px dashed #aeb7c4;border-radius:7px;background:#f7f8fa}.bar-month{font-size:.72rem;color:var(--muted)}.legend{font-size:.82rem;color:var(--muted);margin-top:10px}.legend span{display:inline-block;margin-right:15px}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#5277ff;margin-right:4px}.dash{display:inline-block;width:18px;border-top:2px dashed #aeb7c4;margin:0 4px 3px 0}
+    .table-wrap{overflow-x:auto}.records{width:100%;border-collapse:collapse;min-width:760px}.records th,.records td{text-align:right;padding:11px 8px;border-bottom:1px solid var(--line);white-space:nowrap}.records th{font-size:.82rem;color:var(--muted);font-weight:750}.records th:first-child,.records td:first-child{text-align:left}.records td{font-variant-numeric:tabular-nums}.form-grid{display:grid;grid-template-columns:1.1fr repeat(4,1fr) auto;gap:10px;align-items:end}.field{display:flex;flex-direction:column;gap:5px;font-size:.84rem;font-weight:750}.field input{width:100%}.form-actions{display:flex;gap:8px;align-items:end}.message{min-height:25px;margin:11px 0 0;font-size:.9rem}.message.ok{color:#237847}.message.error{color:#b52d2d}.privacy{font-size:.82rem;color:var(--muted);margin:12px 0 0}.file-label{display:inline-flex;align-items:center;gap:6px;background:#eef2ff;color:#2845b9;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer}.file-label input{display:none}
+    @media(max-width:900px){.cards{grid-template-columns:repeat(3,1fr)}.form-grid{grid-template-columns:repeat(3,1fr)}.form-grid .field:first-child{grid-column:span 3}.form-actions{grid-column:span 3}}
+    @media(max-width:520px){.wrap{padding:20px 12px 42px}.hero{display:block}.cards{grid-template-columns:1fr}.card{padding:16px}.panel{padding:15px;border-radius:14px}.chart{gap:3px;padding-left:0;padding-right:0}.bar-value{font-size:.56rem;transform:rotate(-45deg);margin-bottom:3px}.form-grid{grid-template-columns:1fr 1fr}.form-grid .field:first-child{grid-column:span 2}.form-actions{grid-column:span 2;flex-direction:column;align-items:stretch}.form-actions button{width:100%}.toolbar{align-items:stretch}.toolbar label{display:flex;flex-direction:column;gap:6px}.toolbar input{margin-left:0}.actions{width:100%}.actions>*{flex:1}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div><p class="eyebrow">매달 한눈에 보는 생활비</p><h1>관리비·공과금 비교</h1><p>전기·수도·가스·관리비를 기록하고 지난달과 비교해 보세요.</p></div>
+    </header>
+
+    <section class="panel">
+      <div class="toolbar"><label for="viewMonth">보고 싶은 달 <input id="viewMonth" type="month"></label><div class="actions"><button id="exampleBtn" class="secondary">예제 데이터 불러오기</button><label class="file-label">CSV 불러오기<input id="csvFile" type="file" accept=".csv,text/csv"></label></div></div>
+      <p class="privacy">금액 데이터는 이 기기의 브라우저에만 저장됩니다. 주소·고객번호·계좌번호는 입력하지 않습니다.</p>
+    </section>
+
+    <section class="panel"><p id="summary" class="summary"></p></section>
+    <section id="cards" class="cards" aria-live="polite"></section>
+    <section class="panel"><div class="section-title"><h2>최근 12개월 추이 · 전체 합계</h2><span id="chartRange" class="note"></span></div><div id="chart" class="chart"></div><div class="legend"><span><i class="dot"></i>자료가 있는 달</span><span><i class="dash"></i>자료 없음</span></div></section>
+
+    <section class="panel"><div class="section-title"><h2>전체 기록</h2><span id="recordCount" class="note"></span></div><div class="table-wrap"><table class="records"><thead><tr><th>연월</th><th>전기</th><th>수도</th><th>가스</th><th>관리비</th><th>합계</th><th>삭제</th></tr></thead><tbody id="recordBody"></tbody></table></div><div id="emptyRecords" class="empty">아직 저장된 기록이 없습니다.</div></section>
+
+    <section class="panel"><div class="section-title"><h2>월별 금액 입력</h2><span class="note">금액은 원 단위 숫자로 입력하세요.</span></div><form id="billForm"><div class="form-grid"><label class="field">연월<input id="monthInput" type="month" required></label><label class="field">전기<input id="electricity" type="number" min="0" step="1" inputmode="numeric" placeholder="0" required></label><label class="field">수도<input id="water" type="number" min="0" step="1" inputmode="numeric" placeholder="0" required></label><label class="field">가스<input id="gas" type="number" min="0" step="1" inputmode="numeric" placeholder="0" required></label><label class="field">관리비<input id="maintenance" type="number" min="0" step="1" inputmode="numeric" placeholder="0" required></label><div class="form-actions"><button type="submit">저장하기</button><button type="button" id="clearBtn" class="ghost">입력 지우기</button></div></div><p id="formMessage" class="message" role="status"></p></form></section>
+  </main>
+
+  <script>
+    // 앱에서 다루는 네 가지 공과금 항목
+    const ITEMS = [
+      {key:'electricity', label:'전기'}, {key:'water', label:'수도'},
+      {key:'gas', label:'가스'}, {key:'maintenance', label:'관리비'}
+    ];
+    const STORAGE_KEY = 'utility-bill-comparison-v1';
+    let records = loadRecords();
+    const $ = id => document.getElementById(id);
+    // 숫자가 아니거나 무한대인 값은 화면에 계산하지 않고 0으로 안전하게 처리한다.
+    const safeAmount = value => { const n = Number(value); return Number.isFinite(n) && n >= 0 ? n : 0; };
+    const won = value => `${safeAmount(value).toLocaleString('ko-KR')}원`;
+    const monthLabel = month => month ? `${month.slice(0,4)}년 ${Number(month.slice(5,7))}월` : '';
+    const totalOf = record => record ? ITEMS.reduce((sum,item)=>sum + safeAmount(record[item.key]),0) : 0;
+    const sortRecords = () => records.sort((a,b)=>a.month.localeCompare(b.month));
+    function loadRecords(){
+      // 브라우저 내부 저장소에서만 기록을 읽는다.
+      try { const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); return Array.isArray(data) ? data : []; } catch(e){ return []; }
+    }
+    function saveRecords(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
+    function find(month){ return records.find(r=>r.month===month); }
+    function previousMonth(month){ const d = new Date(`${month}-01T00:00:00`); d.setMonth(d.getMonth()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+    function previousYear(month){ const d = new Date(`${month}-01T00:00:00`); d.setFullYear(d.getFullYear()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+    function latestMonth(){ sortRecords(); return records.length ? records[records.length-1].month : new Date().toISOString().slice(0,7); }
+    function validMonth(month){ return /^\d{4}-(0[1-9]|1[0-2])$/.test(month); }
+    function compareText(current, other){
+      // 비교 대상이 없는 경우는 0원으로 바꾸지 않고 먼저 안내한다.
+      if(other === null || other === undefined) return {html:'비교 자료 없음', cls:'same'};
+      current = safeAmount(current); other = safeAmount(other);
+      const diff = current - other;
+      if(diff === 0) return {html:'− 변화 없음 <span class="note">(0%)</span>', cls:'same'};
+      const sign = diff > 0 ? '▲' : '▼', word = diff > 0 ? '증가' : '감소', cls = diff > 0 ? 'up' : 'down';
+      // 지난달이 0원인데 이번 달에 금액이 있으면 나눗셈을 하지 않는다.
+      if(other === 0) return {html:`${sign} 새로 발생 <span class="note">(증감률 계산 불가)</span>`, cls};
+      const rate = (diff / other) * 100;
+      return {html:`${sign} ${won(Math.abs(diff))} ${word} <span class="note">(${Math.abs(rate).toFixed(1)}%)</span>`, cls};
+    }
+    function yoyText(current, other){
+      if(!other) return {html:'작년 자료 없음', cls:'same'};
+      return compareText(current, other);
+    }
+    function cardHtml(label,key,current,prev,lastYear){
+      const now = safeAmount(current?.[key]), prevValue = prev ? safeAmount(prev[key]) : null, yearValue = lastYear ? safeAmount(lastYear[key]) : null;
+      const p = compareText(now, prev ? prevValue : null), y = yoyText(now, lastYear ? yearValue : null);
+      return `<article class="card"><h3>${label}</h3><div class="amount">${won(now)}</div><div class="compare"><span>전월 대비</span><strong class="${p.cls}">${p.html}</strong></div><div class="compare"><span>작년 같은 달 대비</span><strong class="${y.cls}">${y.html}</strong></div></article>`;
+    }
+    function renderCards(){
+      const month = $('viewMonth').value || latestMonth(), current = find(month), prev = find(previousMonth(month)), year = find(previousYear(month));
+      if(!current){ $('cards').innerHTML = `<div class="panel empty" style="grid-column:1/-1">${monthLabel(month)} 자료가 없습니다. 아래 입력란에서 금액을 저장해 주세요.</div>`; renderSummary(month,null,null); return; }
+      $('cards').innerHTML = ITEMS.map(item=>cardHtml(item.label,item.key,current,prev,year)).join('') + cardHtml('전체 합계','__total__',Object.assign({},current,{__total__:totalOf(current)}),prev?Object.assign({},prev,{__total__:totalOf(prev)}):null,year?Object.assign({},year,{__total__:totalOf(year)}):null).replaceAll('undefined','0');
+      // 합계 카드에서 사용할 임시 키를 실제 값으로 바꾸어 비교 결과를 다시 그린다.
+      const totalCard = document.querySelectorAll('.card')[4]; if(totalCard){ const p=compareText(totalOf(current),prev?totalOf(prev):null), y=yoyText(totalOf(current),year?totalOf(year):null); totalCard.innerHTML=`<h3>전체 합계</h3><div class="amount">${won(totalOf(current))}</div><div class="compare"><span>전월 대비</span><strong class="${p.cls}">${p.html}</strong></div><div class="compare"><span>작년 같은 달 대비</span><strong class="${y.cls}">${y.html}</strong></div>`; }
+      renderSummary(month,current,prev); renderChart(month); $('chartRange').textContent = `${monthLabel(month)} 기준 최근 12개월`;
+    }
+    function renderSummary(month,current,prev){
+      // 카드보다 먼저 읽히는 한 줄 요약을 만든다.
+      if(!current){$('summary').innerHTML=`${monthLabel(month)} 자료를 입력하면 비교 요약이 표시됩니다.`;return;}
+      if(!prev){$('summary').innerHTML=`${monthLabel(month)}은 <strong>지난달 비교 자료 없음</strong>입니다.`;return;}
+      const currentTotal=totalOf(current), prevTotal=totalOf(prev), diff=currentTotal-prevTotal;
+      const rises=ITEMS.map(item=>({label:item.label,diff:safeAmount(current[item.key])-safeAmount(prev[item.key])})).filter(x=>x.diff>0).sort((a,b)=>b.diff-a.diff);
+      const top=rises[0];
+      if(diff===0){$('summary').innerHTML=`${monthLabel(month)}은 지난달과 <strong class="same">변화가 없습니다(0%)</strong>.${top?' 가장 많이 오른 항목은 '+top.label+'이지만 전체 합계는 같습니다.':''}`;return;}
+      const increased=diff>0, direction=increased?'늘었습니다':'줄었습니다', cls=increased?'up':'down';
+      const rate=prevTotal===0 ? '증감률 계산 불가' : `${diff>0?'+':''}${(diff/prevTotal*100).toFixed(1)}%`;
+      const topText=top ? ` 가장 많이 오른 항목은 <strong>${top.label}(+${won(top.diff)})</strong>입니다.` : ' 오른 항목은 없습니다.';
+      $('summary').innerHTML=`${monthLabel(month)}은 지난달보다 <strong class="${cls}">${won(Math.abs(diff))}(${rate}) ${direction}</strong>.${topText}`;
+    }
+    function renderChart(endMonth){
+      const months=[]; const d=new Date(`${endMonth}-01T00:00:00`); for(let i=11;i>=0;i--){const x=new Date(d);x.setMonth(d.getMonth()-i);months.push(`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}`);}
+      const values=months.map(m=>find(m)?totalOf(find(m)):null), max=Math.max(1,...values.filter(v=>v!==null));
+      $('chart').innerHTML=months.map((m,i)=>{const v=values[i];return `<div class="bar-col"><span class="bar-value">${v===null?'':Number(v).toLocaleString('ko-KR')}</span>${v===null?'<span class="missing" title="자료 없음"></span>':`<span class="bar" style="height:${Math.max(5,(v/max)*190)}px" title="${monthLabel(m)} ${won(v)}"></span>`}<span class="bar-month">${m.slice(5)}월</span></div>`}).join('');
+    }
+    function renderTable(){
+      sortRecords(); $('recordCount').textContent=`총 ${records.length}개월`;
+      $('emptyRecords').style.display=records.length?'none':'block'; $('recordBody').innerHTML=records.map(r=>`<tr><td>${r.month}</td>${ITEMS.map(i=>`<td>${won(r[i.key])}</td>`).join('')}<td>${won(totalOf(r))}</td><td><button class="danger" data-delete="${r.month}">삭제</button></td></tr>`).join('');
+      document.querySelectorAll('[data-delete]').forEach(btn=>btn.addEventListener('click',()=>{if(confirm(`${btn.dataset.delete} 기록을 삭제할까요?`)){records=records.filter(r=>r.month!==btn.dataset.delete);saveRecords();renderAll();}}));
+    }
+    function renderAll(){ sortRecords(); const current=$('viewMonth').value; if(!current || !find(current)) $('viewMonth').value=latestMonth(); renderCards(); renderTable(); }
+    function formMessage(text,type='ok'){ $('formMessage').textContent=text; $('formMessage').className=`message ${type}`; }
+    $('billForm').addEventListener('submit',e=>{e.preventDefault(); const month=$('monthInput').value, vals={};
+      if(!validMonth(month)){formMessage('연월은 YYYY-MM 형식으로 선택해 주세요.','error');return;}
+      for(const item of ITEMS){const raw=$(item.key).value; if(raw==='' || !/^\d+(\.\d+)?$/.test(raw) || Number(raw)<0){formMessage(`${item.label} 금액은 0 이상의 숫자로 입력해 주세요.`,'error');return;} vals[item.key]=Number(raw);}
+      const old=find(month); if(old && !confirm(`${month} 기록이 이미 있습니다. 덮어쓸까요?`)) return;
+      records=records.filter(r=>r.month!==month); records.push({month,...vals}); saveRecords(); $('viewMonth').value=month; formMessage(`${month} 기록을 저장했습니다.`); e.target.reset(); renderAll();
+    });
+    $('clearBtn').addEventListener('click',()=>{$('billForm').reset();formMessage('입력 내용을 지웠습니다.');});
+    $('viewMonth').addEventListener('change',renderCards);
+    $('exampleBtn').addEventListener('click',()=>{if(records.length && !confirm('예제 데이터 24개월을 추가할까요? 같은 달은 덮어쓰지 않습니다.'))return; const base=new Date(); const demo=[]; for(let i=23;i>=0;i--){const d=new Date(base.getFullYear(),base.getMonth()-i,1), month=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; demo.push({month,electricity:Math.round(42000+i*310+(i%4)*2500),water:Math.round(18000+i*170+(i%3)*1200),gas:Math.round(35000+i*420+(i%5)*3000),maintenance:Math.round(70000+(i%6)*1800)});} demo.forEach(r=>{if(!find(r.month))records.push(r);});saveRecords();$('viewMonth').value=latestMonth();renderAll();formMessage('예제 데이터 24개월을 불러왔습니다.');});
+    $('csvFile').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return; const reader=new FileReader(); reader.onload=()=>importCsv(decodeCsv(reader.result)); reader.readAsArrayBuffer(file); e.target.value='';});
+    function decodeCsv(buffer){
+      // UTF-8을 먼저 시도하고, 실패하면 한글 Windows 파일에서 많이 쓰는 EUC-KR로 읽는다.
+      try { return new TextDecoder('utf-8',{fatal:true}).decode(buffer).replace(/^\uFEFF/,''); }
+      catch(e) { try { return new TextDecoder('euc-kr').decode(buffer).replace(/^\uFEFF/,''); } catch(e2) { return ''; } }
+    }
+    function importCsv(text){
+      // CSV는 첫 줄에 연월,전기,수도,가스,관리비 순서로 입력한다.
+      const lines=text.split(/\r?\n/).map((x,index)=>({text:x.trim(),line:index+1})).filter(x=>x.text); if(!lines.length){formMessage('CSV 파일에 데이터가 없습니다.','error');return;}
+      const start=/연월|month/i.test(lines[0].text)?1:0, imported=[], badLines=[];
+      for(let i=start;i<lines.length;i++){
+        const cols=lines[i].text.split(',').map(x=>x.trim().replace(/^"|"$/g,''));
+        if(cols.length!==5 || !validMonth(cols[0]) || cols.slice(1).some(v=>!/^\d+(\.\d+)?$/.test(v)||Number(v)<0)){badLines.push(lines[i].line);continue;}
+        imported.push({month:cols[0],electricity:Number(cols[1]),water:Number(cols[2]),gas:Number(cols[3]),maintenance:Number(cols[4])});
+      }
+      if(!imported.length){formMessage(`불러올 수 있는 줄이 없습니다. 문제 줄: ${badLines.join(', ')}번째 줄`,'error');return;}
+      // 기존 자료와 겹치는 달이 하나라도 있으면 한 번만 확인하고 전체에 적용한다.
+      const duplicates=imported.some(r=>find(r.month)); if(duplicates && !confirm('이미 있는 달이 포함되어 있습니다. 덮어쓸까요?'))return;
+      imported.forEach(r=>{records=records.filter(x=>x.month!==r.month);records.push(r);});saveRecords();$('viewMonth').value=latestMonth();renderAll();
+      const warning=badLines.length?` 문제 줄: ${badLines.join(', ')}번째 줄은 건너뛰었습니다.`:'';
+      formMessage(`${imported.length}개월의 CSV 데이터를 불러왔습니다.${warning}`,badLines.length?'error':'ok');
+    }
+    // 처음 열었을 때도 가장 최근 자료를 보여준다.
+    $('viewMonth').value=latestMonth(); renderAll();
+  </script>
+</body>
+</html>
+
